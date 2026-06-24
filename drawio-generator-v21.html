@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deloitte 流程图生成器 v21</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--p:#86BC25;--pd:#6B9A20;--bd:#1a1a1a;--bc:#2a2a2a;--bi:#333;--t:#fff;--ts:#aaa;--b:#444;--ok:#28a745;--w:#ffc107;--i:#17a2b8;--di:#4CAF50;--dout:#FF9800;--e:#dc3545}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bd);color:var(--t);line-height:1.6}
+.hdr{background:linear-gradient(135deg,#0d2137,#1a3a4a);padding:15px 30px;border-bottom:3px solid var(--p);display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:22px;color:#fff}.hdr .br{color:var(--p);font-size:13px}
+.mc{display:grid;grid-template-columns:400px 1fr;height:calc(100vh - 56px)}
+.sb{background:var(--bc);border-right:1px solid var(--b);overflow-y:auto;padding:15px}
+.sb h2{font-size:13px;margin-bottom:10px;color:var(--p);text-transform:uppercase;letter-spacing:1px}
+.fg{margin-bottom:14px}.fg label{display:block;font-size:11px;color:var(--ts);margin-bottom:4px;font-weight:500}
+.fg input,.fg textarea,.fg select{width:100%;padding:8px 10px;background:var(--bi);border:1px solid var(--b);border-radius:4px;color:var(--t);font-size:12px}
+.fg input:focus,.fg textarea:focus,.fg select:focus{outline:none;border-color:var(--p)}
+.fg textarea{min-height:50px;resize:vertical}
+.btn{padding:6px 12px;border:none;border-radius:4px;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px}
+.bp{background:var(--p);color:#000}.bp:hover{background:var(--pd)}.bp:disabled{background:#666;color:#999}
+.bs{background:var(--bi);color:var(--t);border:1px solid var(--b)}.bs:hover{background:#444}
+.bk{background:var(--ok);color:#fff}
+.bg{display:flex;gap:6px;margin-top:10px}.bf{width:100%;justify-content:center}
+.dv{height:1px;background:var(--b);margin:12px 0}
+.hi{display:flex;align-items:center;gap:6px;padding:6px 10px;background:#2a2a2a;border-radius:5px;margin-bottom:10px;font-size:10px;color:var(--ts)}
+.hs{display:flex;align-items:center;gap:3px}
+.hs .ic{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold}
+.hs.sl .ic{background:var(--p);color:#000}
+.hs.ac .ic{background:var(--i);color:#fff}
+.hs.dc .ic{background:#ffc107;color:#000;border-radius:2px}
+.ha{color:var(--ts)}
+.sc{margin-top:10px}
+.sl-c{background:var(--bi);border:1px solid var(--b);border-radius:5px;margin-bottom:8px;overflow:hidden}
+.sl-h{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#3a3a3a;cursor:pointer}
+.sl-h:hover{background:#444}.sl-hl{display:flex;align-items:center;gap:8px}
+.sl-i{width:16px;height:16px;background:var(--p);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:bold;color:#000}
+.sl-n{font-size:12px;font-weight:600}.sl-cnt{font-size:9px;color:var(--ts);margin-left:5px}
+.sl-a{display:flex;gap:4px}.sl-b{padding:10px;display:none}.sl-c.exp .sl-b{display:block}
+.ai{background:#2a2a2a;border:1px solid var(--b);border-radius:4px;margin-bottom:5px;overflow:hidden}
+.ai-h{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;cursor:pointer}
+.ai-h:hover{background:#333}.ai-hl{display:flex;align-items:center;gap:5px}
+.ai-n{background:var(--p);color:#000;font-size:9px;font-weight:bold;padding:1px 5px;border-radius:6px}
+.ai-nm{font-size:11px}.ai-b{padding:8px;background:#252525;display:none}.ai.exp .ai-b{display:block}
+.ds{margin-top:6px}.ds h5{font-size:10px;color:var(--ts);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.ds h5 .d{width:6px;height:6px;border-radius:50%}.ds h5 .d.i{background:var(--di)}.ds h5 .d.o{background:var(--dout)}
+.dt{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;background:#333;border-radius:10px;font-size:9px;margin:2px}
+.dt.i{border:1px solid var(--di)}.dt.o{border:1px solid var(--dout)}
+.dt .rm{cursor:pointer;opacity:.6}.dt .rm:hover{opacity:1}
+.ct{display:flex;flex-direction:column;overflow:hidden}
+.tb{background:var(--bc);padding:8px 15px;border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ts)}
+.ec{flex:1;display:grid;grid-template-rows:1fr 1fr;min-height:0}
+.ce{background:#1e1e1e;border-bottom:1px solid var(--b);display:flex;flex-direction:column}
+.ce-h{background:#2d2d2d;padding:6px 12px;font-size:10px;color:var(--ts);border-bottom:1px solid #404040;display:flex;justify-content:space-between}
+.ce textarea{flex:1;width:100%;padding:10px;background:0 0;border:none;color:#d4d4d4;font-family:Monaco,Menlo,monospace;font-size:11px;line-height:1.4;resize:none}
+.dc{background:#1a1a1a;display:flex;flex-direction:column;overflow:hidden}
+.dc-h{background:#2d2d2d;padding:6px 12px;font-size:10px;color:var(--ts);border-bottom:1px solid #404040;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.dc-a{flex:1;overflow:hidden}
+.dc-a iframe{width:100%;height:100%;border:none}
+.st{display:flex;align-items:center;gap:4px;font-size:9px}
+.st-d{width:6px;height:6px;border-radius:50%;background:var(--ok)}.st-d.ld{background:var(--w);animation:p 1s infinite}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
+.as{background:rgba(23,162,184,.1);border:1px solid var(--i);border-radius:5px;padding:10px;margin-top:10px}
+.as h3{font-size:11px;color:var(--i);margin-bottom:6px}
+.note{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:8px;margin-top:8px;font-size:10px;color:#856404}
+.tmpl-section{background:var(--bi);border:1px solid var(--b);border-radius:5px;padding:12px;margin-top:12px}
+.tmpl-section h3{font-size:12px;color:var(--p);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.tmpl-section h3::before{content:"📋";font-size:14px}
+.tmpl-info{background:#252525;border:1px solid var(--b);border-radius:4px;padding:8px;margin-top:8px;font-size:10px;color:var(--ts);max-height:300px;overflow-y:auto}
+.tmpl-info pre{margin:0;white-space:pre-wrap;font-family:Monaco,Menlo,monospace;font-size:10px;line-height:1.5}
+.tmpl-label{font-size:10px;color:var(--i);font-weight:600;margin-top:8px;margin-bottom:4px}
+.drawio-link{background:var(--bi);border:1px solid var(--b);border-radius:5px;padding:12px;margin-top:12px}
+.drawio-link h3{font-size:12px;color:var(--p);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.drawio-link h3::before{content:"✏️";font-size:14px}
+.drawio-link p{font-size:10px;color:var(--ts);margin-bottom:8px}
+.drawio-link a{color:var(--i);text-decoration:none;font-size:11px;font-weight:600}
+.drawio-link a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bd)}::-webkit-scrollbar-thumb{background:#555;border-radius:3px}
+</style>
+</head>
+<body>
+<header class="hdr"><div><h1>流程图生成器 v21</h1><p style="font-size:10px;color:#aaa;margin-top:2px">Deloitte 标准泳道 · 完整预设 · MiMo AI</p></div><div class="br">DELOITTE.标准 v21</div></header>
+<div class="mc">
+<aside class="sb">
+<h2>流程配置</h2>
+<div class="hi">
+  <div class="hs sl"><span class="ic">S</span><span>泳道</span></div>
+  <span class="ha">→</span>
+  <div class="hs ac"><span class="ic">A</span><span>活动</span></div>
+  <span class="ha">→</span>
+  <div class="hs dc"><span class="ic" style="border-radius:2px">D</span><span>文档</span></div>
+</div>
+
+<div class="fg"><label>MiMo API Key</label><input type="password" id="apiKey" value="sk-cbtddfsdb3pkqkd7xd04y43s0g4cn667ljdvtzlruv0zdapg"></div>
+
+<!-- 模板选择 -->
+<div class="fg">
+<label>选择流程模板（预设完整XML）</label>
+<select id="tmplSel" onchange="loadTmpl()">
+<option value="">-- 选择预设流程 --</option>
+<option value="pig-transfer">断奶仔猪转群（6泳道·8步骤·2决策点）</option>
+<option value="purchase-exec">采购执行（4泳道·7步骤·1决策点）</option>
+<option value="payment-approval">付款审批（3泳道·6步骤·2决策点）</option>
+<option value="inventory-mgmt">库存管理（5泳道·8步骤·2决策点）</option>
+<option value="custom">自定义流程</option>
+</select>
+</div>
+
+<div class="fg"><label>流程编号</label><input type="text" id="pCode" value="4.2"></div>
+<div class="fg"><label>流程名称</label><input type="text" id="pName" value="断奶仔猪转群"></div>
+
+<div class="dv"></div>
+
+<!-- 泳道/活动/文档配置（自动填充） -->
+<div class="fg"><label>添加泳道</label><div style="display:flex;gap:6px"><input type="text" id="nRole" placeholder="角色名称" style="flex:1"><button class="btn bs" onclick="addRole()">+</button></div></div>
+<div class="sc" id="slCont"></div>
+
+<div class="dv"></div>
+
+<!-- Deloitte 规范 -->
+<div class="tmpl-section">
+<h3>Deloitte 标准规范（完整蒸馏）</h3>
+<p style="font-size:10px;color:var(--ts);margin-bottom:8px">生成流程图必须遵循的规范，会完整发送给 AI</p>
+<div class="tmpl-info" id="tmplPreview">
+<pre id="tmplContent">正在加载规范...</pre>
+</div>
+<div class="tmpl-label">流程信息（给AI的提示词）</div>
+<textarea id="processInfo" style="width:100%;min-height:150px;background:#252525;border:1px solid var(--b);border-radius:4px;padding:8px;color:#d4d4d4;font-size:10px;font-family:Monaco,Menlo,monospace;resize:vertical" placeholder="选择模板后自动填充，或手动输入流程信息..."></textarea>
+</div>
+
+<div class="dv"></div>
+<div class="bg"><button class="btn bp bf" onclick="genFromForm()">📋 从表单生成流程信息</button></div>
+<div class="bg"><button class="btn bk bf" onclick="genWithAI()">🚀 AI 优化并生成 XML</button></div>
+<div class="bg"><button class="btn bs" onclick="dl()" style="flex:1">📥 下载</button><button class="btn bs" onclick="cp()" style="flex:1">📋 复制</button></div>
+<div class="note">编辑表单后点击"从表单生成流程信息"，AI提示词会自动更新</div>
+
+<!-- Draw.io 编辑器入口 -->
+<div class="drawio-link">
+<h3>Draw.io 在线编辑器</h3>
+<p>复制右侧 XML 代码，粘贴到 Draw.io 进行可视化编辑</p>
+<a href="https://app.diagrams.net/" target="_blank">打开 Draw.io 编辑器 ↗</a>
+<p style="margin-top:8px;font-size:9px;color:#666">提示：在 Draw.io 中选择 File → Import from → Device，然后粘贴 XML</p>
+</div>
+
+</aside>
+<main class="ct">
+<div class="tb"><span>编辑与预览</span><div class="st"><span class="st-d" id="stDot"></span><span id="stTxt">就绪</span></div></div>
+<div class="ec">
+<div class="ce"><div class="ce-h"><span>Draw.io XML（可编辑）</span><span id="xmlInfo">选择模板</span></div><textarea id="xmlOut" spellcheck="false"></textarea></div>
+<div class="dc"><div class="dc-h"><span>Draw.io 预览</span><span id="pvSt">加载中...</span></div>
+<div class="dc-a"><iframe id="drawioFrame" src="about:blank"></iframe></div></div>
+</div>
+</main>
+</div>
+
+<script>
+let XML='',drawioReady=false,pendingXML=null;
+let FD={pCode:'4.2',pName:'断奶仔猪转群',swimlanes:[]};
+
+// ========== 完整的Deloitte规范（蒸馏版）==========
+const DELOITTE_SKILLS=`# 德勤标准 Drawio XML 生成 - 完整约束
+
+---
+
+## 任务
+
+根据下面提供的【流程信息】，生成一个符合【德勤标准约束】的 Drawio XML 文件。
+
+---
+
+## 德勤标准约束（Strict Rules）
+
+### 1. 布局结构
+
+**泳道格式**：
+- 使用**水平泳道**（horizontal=0）
+- 角色名称**垂直显示**在泳道左侧
+- 流程从**左向右**流动
+- 每个泳道高度：90px
+- 泳道宽度：1860px
+
+**开始和结束位置**（关键！）：
+- **开始和结束都在第一个泳道**（流程驱动泳道）
+- 开始：放在第一个泳道的**最左边**（x=120）
+- 结束：放在第一个泳道的**最右边**（x=1780）
+- **不要**为开始和结束创建单独的泳道
+
+**角色标签位置**：
+- 在泳道的**左侧**
+- 宽度：76px
+- 位置：x=8, y=22
+- 字体大小：16pt
+- 颜色：白色
+
+### 2. 活动编号
+
+- 使用**两位数顺序编号**：01, 02, 03, 04...
+- 活动框中显示格式：\`01&#xa;活动名称\`
+- 编号**必须连续**，不能跳过任何数字
+- 所有活动的编号顺序遵循流程流向
+
+### 3. 颜色标准（Deloitte Standard - 必须严格遵守）
+
+**画布背景**：\`background="#000000"\`（黑色）
+
+**泳道背景**：\`fillColor=#2A2A2A; strokeColor=#CCCCCC; fontColor=#FFFFFF\`
+
+**活动框**：
+\`\`\`
+fillColor=#000000（黑色填充）
+strokeColor=#FFFFFF（白色边框）
+fontColor=#FFFFFF（白色文字）
+strokeWidth=2（2像素边框）
+fontSize=16（16号字体）
+\`\`\`
+
+**系统/数据源（绿色）**：
+\`\`\`
+fillColor=#D1EDA0（浅绿填充）
+strokeColor=#00AA00（深绿边框）
+fontColor=#000000（黑色文字）
+fontSize=12（12号字体）
+fontStyle=1（粗体）
+shape=cloud（云朵形状）
+size=0.5（云朵大小）
+\`\`\`
+
+**文档/输出（黄色）**：
+\`\`\`
+fillColor=#FFC000（金色填充）
+strokeColor=#FFD700（亮金边框）
+fontColor=#000000（黑色文字）
+fontSize=12（12号字体）
+fontStyle=1（粗体）
+shape=document（文档形状）
+size=0.15（文档翻页效果）
+\`\`\`
+
+**决策点（菱形）**：
+\`\`\`
+fillColor=#000000（黑色填充）
+strokeColor=#FFFFFF（白色边框）
+fontColor=#FFFFFF（白色文字）
+strokeWidth=2（2像素边框）
+fontSize=14（14号字体）
+shape=rhombus（菱形）
+\`\`\`
+
+**开始/结束（圆角矩形）**：
+\`\`\`
+fillColor=#000000（黑色填充）
+strokeColor=#FFFFFF（白色边框）
+fontColor=#FFFFFF（白色文字）
+strokeWidth=2（2像素边框）
+fontSize=12（12号字体）
+rounded=1（圆角）
+\`\`\`
+
+**决策标签**：
+\`\`\`
+是（Yes）：fontColor=#00FF00（绿色），fontStyle=1（粗体）
+否（No）：fontColor=#FF0000（红色），fontStyle=1（粗体）
+fontSize=13（13号字体）
+\`\`\`
+
+### 4. 文档位置规则（Critical - 必须严格遵守）
+
+**系统输入（绿色）**：
+- 位置：**放在活动框的 TOP（上方）**
+- y坐标：-15（在活动框上方）
+- 与活动框水平对齐
+
+**文档输入（黄色，从其他活动流入本活动）**：
+- 位置：**放在活动框的 TOP（上方）**
+- y坐标：-15
+- 与系统输入相同位置
+
+**文档输出（黄色）**：
+| 文档类型 | 位置 | y坐标 | 说明 |
+|---------|------|-------|------|
+| **流转给下游** | RIGHT（右侧） | 60 | 从活动框右侧向右偏移 |
+| **最终产物/归档** | BOTTOM（下方） | 65 | 在活动框下方 |
+
+### 5. 连接规则（Edge Routing - 关键！）
+
+**正交路由（必须）**：\`edgeStyle=orthogonalEdgeStyle\`
+
+**禁止斜线** - 所有边必须是 90度转弯
+
+**出口点（Exit Points）**：
+\`\`\`
+右侧出口：exitX=1;exitY=0.5;exitDx=0;exitDy=0
+底部出口：exitX=0.5;exitY=1;exitDx=0;exitDy=0
+\`\`\`
+
+**入口点（Entry Points）**：
+\`\`\`
+左侧入口：entryX=0;entryY=0.5;entryDx=0;entryDy=0
+顶部入口：entryX=0.5;entryY=0;entryDx=0;entryDy=0
+\`\`\`
+
+**边样式**：
+\`\`\`
+rounded=0
+orthogonalLoop=1
+jettySize=auto
+html=1
+strokeColor=#FFFFFF（白色）
+strokeWidth=2（2像素）
+\`\`\`
+
+**路径点（Waypoints - 避免交叉）**：
+当边需要绕过其他元素时，使用 \`<Array as="points">\` 添加路径点。
+
+### 6. 决策点
+
+**形状**：菱形（rhombus）
+**大小**：120 x 70 像素
+
+**出口**（必须有两个）：
+- Yes（是）→ 通常向右
+- No（否）→ 通常向下返回
+
+**标签位置**：
+- "是"标签：放在菱形的右侧
+- "否"标签：放在菱形的下方
+
+### 7. XML 结构（必须遵循）
+
+**文件骨架**：
+\`\`\`xml
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="[流程名称]" id="[流程ID]">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="#000000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <!-- 所有元素在这里 -->
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+\`\`\`
+
+**关键属性**：
+- \`id="0"\` 和 \`id="1"\` 是必需的根节点
+- 用户元素从 \`id="2"\` 开始递增
+- 所有文本使用 \`html=1\`
+- 多行文本使用 \`&#xa;\`（换行符）
+- 背景色在 \`<mxGraphModel>\` 中设置
+
+---
+
+**版本**：2.0
+**用途**：无 Skills 环境下生成 Deloitte 标准 Drawio XML 的完整约束输入模板`;
+
+// ========== 预设XML模板（完整）==========
+const XML_TEMPLATES = {
+  'pig-transfer': `<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="断奶仔猪转群流程" id="pig-transfer">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="#000000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane1" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="30" as="geometry" /></mxCell>
+        <mxCell id="role1" parent="lane1" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="流程驱动" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane2" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="110" as="geometry" /></mxCell>
+        <mxCell id="role2" parent="lane2" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="产房" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane3" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="190" as="geometry" /></mxCell>
+        <mxCell id="role3" parent="lane3" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="保育舍" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane4" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="270" as="geometry" /></mxCell>
+        <mxCell id="role4" parent="lane4" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="兽医" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane5" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="350" as="geometry" /></mxCell>
+        <mxCell id="role5" parent="lane5" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="饲养员" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane6" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="430" as="geometry" /></mxCell>
+        <mxCell id="role6" parent="lane6" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="统计员" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="start" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="开始" vertex="1"><mxGeometry height="40" width="80" x="120" y="20" as="geometry" /></mxCell>
+        <mxCell id="step01" parent="lane1" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="01&#xa;断奶计划制定" vertex="1"><mxGeometry height="50" width="180" x="300" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys01" parent="lane1" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="养殖管理系统" vertex="1"><mxGeometry height="30" width="100" x="340" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc01" parent="lane1" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《断奶计划表》" vertex="1"><mxGeometry height="28" width="100" x="480" y="60" as="geometry" /></mxCell>
+        <mxCell id="step02" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="02&#xa;仔猪健康评估" vertex="1"><mxGeometry height="50" width="180" x="530" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc02" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《健康评估报告》" vertex="1"><mxGeometry height="28" width="100" x="710" y="60" as="geometry" /></mxCell>
+        <mxCell id="step03" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="03&#xa;转群批次确认" vertex="1"><mxGeometry height="50" width="180" x="760" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc03" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《转群批次单》" vertex="1"><mxGeometry height="28" width="100" x="940" y="60" as="geometry" /></mxCell>
+        <mxCell id="decision01" parent="lane2" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="是否达到&#xa;转群标准？" vertex="1"><mxGeometry height="70" width="120" x="990" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes01" parent="lane2" style="text;fontSize=13;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="28" width="30" x="1110" y="20" as="geometry" /></mxCell>
+        <mxCell id="label_no01" parent="lane2" style="text;fontSize=13;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="28" width="30" x="1035" y="85" as="geometry" /></mxCell>
+        <mxCell id="step04" parent="lane5" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="04&#xa;转群操作执行" vertex="1"><mxGeometry height="50" width="180" x="1180" y="15" as="geometry" /></mxCell>
+        <mxCell id="step05" parent="lane3" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="05&#xa;转入保育舍" vertex="1"><mxGeometry height="50" width="180" x="1180" y="15" as="geometry" /></mxCell>
+        <mxCell id="decision02" parent="lane3" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="是否需要&#xa;隔离观察？" vertex="1"><mxGeometry height="70" width="120" x="1410" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes02" parent="lane3" style="text;fontSize=13;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="28" width="30" x="1530" y="20" as="geometry" /></mxCell>
+        <mxCell id="label_no02" parent="lane3" style="text;fontSize=13;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="28" width="30" x="1455" y="85" as="geometry" /></mxCell>
+        <mxCell id="step06" parent="lane6" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="06&#xa;转群记录" vertex="1"><mxGeometry height="50" width="180" x="1410" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc06" parent="lane6" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《转群记录表》" vertex="1"><mxGeometry height="28" width="100" x="1590" y="60" as="geometry" /></mxCell>
+        <mxCell id="step07" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="07&#xa;隔离观察处理" vertex="1"><mxGeometry height="50" width="180" x="1580" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc07" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《隔离观察记录》" vertex="1"><mxGeometry height="28" width="100" x="1760" y="60" as="geometry" /></mxCell>
+        <mxCell id="step08" parent="lane6" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="08&#xa;转群数据统计" vertex="1"><mxGeometry height="50" width="180" x="1630" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys08" parent="lane6" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="数据分析系统" vertex="1"><mxGeometry height="30" width="100" x="1670" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc08" parent="lane6" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《转群统计报表》" vertex="1"><mxGeometry height="28" width="100" x="1810" y="60" as="geometry" /></mxCell>
+        <mxCell id="end" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="结束" vertex="1"><mxGeometry height="40" width="80" x="1780" y="20" as="geometry" /></mxCell>
+        <mxCell id="e01" edge="1" parent="1" source="start" target="step01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e02" edge="1" parent="1" source="step01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e03" edge="1" parent="1" source="step02" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e04" edge="1" parent="1" source="step03" target="decision01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e05" edge="1" parent="1" source="decision01" target="step04" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e06" edge="1" parent="1" source="decision01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1050" y="95"/><mxPoint x="1050" y="230"/><mxPoint x="620" y="230"/><mxPoint x="620" y="65"/></Array></mxGeometry></mxCell>
+        <mxCell id="e07" edge="1" parent="1" source="step04" target="step05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e08" edge="1" parent="1" source="step05" target="decision02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e09" edge="1" parent="1" source="decision02" target="step07" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="decision02" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="step07" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="step06" target="step08" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="step08" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>`,
+
+  'purchase-exec': `<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="采购执行流程" id="purchase-execution">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="#000000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane1" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="30" as="geometry" /></mxCell>
+        <mxCell id="role1" parent="lane1" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="流程驱动" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane2" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="110" as="geometry" /></mxCell>
+        <mxCell id="role2" parent="lane2" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="采购部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane3" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="190" as="geometry" /></mxCell>
+        <mxCell id="role3" parent="lane3" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="供应商" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane4" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="270" as="geometry" /></mxCell>
+        <mxCell id="role4" parent="lane4" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="仓储部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="start" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="开始" vertex="1"><mxGeometry height="40" width="80" x="120" y="20" as="geometry" /></mxCell>
+        <mxCell id="step01" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="01&#xa;采购订单确认" vertex="1"><mxGeometry height="50" width="180" x="300" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys01" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="ERP系统" vertex="1"><mxGeometry height="30" width="100" x="340" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc01" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《采购订单》" vertex="1"><mxGeometry height="28" width="100" x="480" y="60" as="geometry" /></mxCell>
+        <mxCell id="step02" parent="lane1" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="02&#xa;价格审核" vertex="1"><mxGeometry height="50" width="180" x="530" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys02" parent="lane1" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="财务系统" vertex="1"><mxGeometry height="30" width="100" x="570" y="-15" as="geometry" /></mxCell>
+        <mxCell id="step03" parent="lane3" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="03&#xa;订单执行" vertex="1"><mxGeometry height="50" width="180" x="760" y="15" as="geometry" /></mxCell>
+        <mxCell id="decision01" parent="lane3" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="是否按时&#xa;交付？" vertex="1"><mxGeometry height="70" width="120" x="990" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes01" parent="lane3" style="text;fontSize=13;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="28" width="30" x="1110" y="20" as="geometry" /></mxCell>
+        <mxCell id="label_no01" parent="lane3" style="text;fontSize=13;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="28" width="30" x="1035" y="85" as="geometry" /></mxCell>
+        <mxCell id="step04" parent="lane3" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="04&#xa;发货通知" vertex="1"><mxGeometry height="50" width="180" x="1180" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc04" parent="lane3" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《发货通知单》" vertex="1"><mxGeometry height="28" width="100" x="1360" y="60" as="geometry" /></mxCell>
+        <mxCell id="step05" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="05&#xa;收货验收" vertex="1"><mxGeometry height="50" width="180" x="1180" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys05" parent="lane4" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="WMS系统" vertex="1"><mxGeometry height="30" width="100" x="1220" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc05" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《验收单》" vertex="1"><mxGeometry height="28" width="100" x="1360" y="60" as="geometry" /></mxCell>
+        <mxCell id="step06" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="06&#xa;质量检验" vertex="1"><mxGeometry height="50" width="180" x="1410" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc06" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《质检报告》" vertex="1"><mxGeometry height="28" width="100" x="1590" y="60" as="geometry" /></mxCell>
+        <mxCell id="step07" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="07&#xa;入库上架" vertex="1"><mxGeometry height="50" width="180" x="1630" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys07" parent="lane4" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="WMS系统" vertex="1"><mxGeometry height="30" width="100" x="1670" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc07" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《入库单》" vertex="1"><mxGeometry height="28" width="100" x="1810" y="60" as="geometry" /></mxCell>
+        <mxCell id="end" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="结束" vertex="1"><mxGeometry height="40" width="80" x="1780" y="20" as="geometry" /></mxCell>
+        <mxCell id="e01" edge="1" parent="1" source="start" target="step01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e02" edge="1" parent="1" source="step01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e03" edge="1" parent="1" source="step02" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e04" edge="1" parent="1" source="step03" target="decision01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e05" edge="1" parent="1" source="decision01" target="step04" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e06" edge="1" parent="1" source="decision01" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e07" edge="1" parent="1" source="step04" target="step05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e08" edge="1" parent="1" source="step05" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e09" edge="1" parent="1" source="step06" target="step07" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step07" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>`,
+
+  'payment-approval': `<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="付款审批流程" id="payment-approval">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="#000000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane1" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="30" as="geometry" /></mxCell>
+        <mxCell id="role1" parent="lane1" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="流程驱动" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane2" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="110" as="geometry" /></mxCell>
+        <mxCell id="role2" parent="lane2" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="财务部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="lane3" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="80" width="1860" x="30" y="190" as="geometry" /></mxCell>
+        <mxCell id="role3" parent="lane3" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="管理层" vertex="1"><mxGeometry height="36" width="76" x="8" y="22" as="geometry" /></mxCell>
+        <mxCell id="start" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="开始" vertex="1"><mxGeometry height="40" width="80" x="120" y="20" as="geometry" /></mxCell>
+        <mxCell id="step01" parent="lane1" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="01&#xa;付款申请提交" vertex="1"><mxGeometry height="50" width="180" x="300" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys01" parent="lane1" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="财务系统" vertex="1"><mxGeometry height="30" width="100" x="340" y="-15" as="geometry" /></mxCell>
+        <mxCell id="doc01" parent="lane1" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《付款申请单》" vertex="1"><mxGeometry height="28" width="100" x="480" y="60" as="geometry" /></mxCell>
+        <mxCell id="step02" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="02&#xa;发票审核" vertex="1"><mxGeometry height="50" width="180" x="530" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys02" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="财务系统" vertex="1"><mxGeometry height="30" width="100" x="570" y="-15" as="geometry" /></mxCell>
+        <mxCell id="decision01" parent="lane2" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="发票是否&#xa;合规？" vertex="1"><mxGeometry height="70" width="120" x="760" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes01" parent="lane2" style="text;fontSize=13;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="28" width="30" x="880" y="20" as="geometry" /></mxCell>
+        <mxCell id="label_no01" parent="lane2" style="text;fontSize=13;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="28" width="30" x="805" y="85" as="geometry" /></mxCell>
+        <mxCell id="step03" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="03&#xa;部门审批" vertex="1"><mxGeometry height="50" width="180" x="950" y="15" as="geometry" /></mxCell>
+        <mxCell id="step04" parent="lane3" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="04&#xa;管理层审批" vertex="1"><mxGeometry height="50" width="180" x="950" y="15" as="geometry" /></mxCell>
+        <mxCell id="decision02" parent="lane3" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="审批是否&#xa;通过？" vertex="1"><mxGeometry height="70" width="120" x="1180" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes02" parent="lane3" style="text;fontSize=13;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="28" width="30" x="1300" y="20" as="geometry" /></mxCell>
+        <mxCell id="label_no02" parent="lane3" style="text;fontSize=13;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="28" width="30" x="1225" y="85" as="geometry" /></mxCell>
+        <mxCell id="step05" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="05&#xa;付款执行" vertex="1"><mxGeometry height="50" width="180" x="1410" y="15" as="geometry" /></mxCell>
+        <mxCell id="sys05" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=12;fontStyle=1;size=0.5;" value="银行系统" vertex="1"><mxGeometry height="30" width="100" x="1450" y="-15" as="geometry" /></mxCell>
+        <mxCell id="step06" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=16;" value="06&#xa;付款凭证归档" vertex="1"><mxGeometry height="50" width="180" x="1630" y="15" as="geometry" /></mxCell>
+        <mxCell id="doc06" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=12;fontStyle=1;size=0.15;" value="《付款凭证》" vertex="1"><mxGeometry height="28" width="100" x="1670" y="85" as="geometry" /></mxCell>
+        <mxCell id="end" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="结束" vertex="1"><mxGeometry height="40" width="80" x="1780" y="20" as="geometry" /></mxCell>
+        <mxCell id="e01" edge="1" parent="1" source="start" target="step01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e02" edge="1" parent="1" source="step01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e03" edge="1" parent="1" source="step02" target="decision01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e04" edge="1" parent="1" source="decision01" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e05" edge="1" parent="1" source="decision01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e06" edge="1" parent="1" source="step03" target="step04" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e07" edge="1" parent="1" source="step04" target="decision02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e08" edge="1" parent="1" source="decision02" target="step05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e09" edge="1" parent="1" source="decision02" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step05" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="step06" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>`,
+
+  'inventory-mgmt': `<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="库存管理流程" id="inventory-management">
+    <mxGraphModel dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" background="#000000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lane1" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="70" width="1860" x="30" y="30" as="geometry" /></mxCell>
+        <mxCell id="role1" parent="lane1" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="流程驱动" vertex="1"><mxGeometry height="36" width="76" x="8" y="17" as="geometry" /></mxCell>
+        <mxCell id="lane2" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="70" width="1860" x="30" y="100" as="geometry" /></mxCell>
+        <mxCell id="role2" parent="lane2" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="仓储部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="17" as="geometry" /></mxCell>
+        <mxCell id="lane3" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="70" width="1860" x="30" y="170" as="geometry" /></mxCell>
+        <mxCell id="role3" parent="lane3" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="采购部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="17" as="geometry" /></mxCell>
+        <mxCell id="lane4" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="70" width="1860" x="30" y="240" as="geometry" /></mxCell>
+        <mxCell id="role4" parent="lane4" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="销售部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="17" as="geometry" /></mxCell>
+        <mxCell id="lane5" parent="1" style="shape=swimlane;startSize=80;horizontal=0;swimlaneLine=1;fillColor=#2A2A2A;strokeColor=#CCCCCC;fontColor=#FFFFFF;fontSize=11;" value="" vertex="1"><mxGeometry height="70" width="1860" x="30" y="310" as="geometry" /></mxCell>
+        <mxCell id="role5" parent="lane5" style="text;whiteSpace=wrap;fontColor=#FFFFFF;fontSize=16;" value="财务部门" vertex="1"><mxGeometry height="36" width="76" x="8" y="17" as="geometry" /></mxCell>
+        <mxCell id="start" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="开始" vertex="1"><mxGeometry height="35" width="70" x="100" y="17" as="geometry" /></mxCell>
+        <mxCell id="step01" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="01&#xa;库存盘点" vertex="1"><mxGeometry height="45" width="160" x="260" y="12" as="geometry" /></mxCell>
+        <mxCell id="sys01" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=11;fontStyle=1;size=0.5;" value="WMS系统" vertex="1"><mxGeometry height="28" width="90" x="295" y="-16" as="geometry" /></mxCell>
+        <mxCell id="doc01" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《盘点表》" vertex="1"><mxGeometry height="25" width="90" x="420" y="52" as="geometry" /></mxCell>
+        <mxCell id="step02" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="02&#xa;差异分析" vertex="1"><mxGeometry height="45" width="160" x="480" y="12" as="geometry" /></mxCell>
+        <mxCell id="doc02" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《差异分析报告》" vertex="1"><mxGeometry height="25" width="90" x="640" y="52" as="geometry" /></mxCell>
+        <mxCell id="decision01" parent="lane2" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="差异是否&#xa;合理？" vertex="1"><mxGeometry height="60" width="100" x="690" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes01" parent="lane2" style="text;fontSize=12;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="25" width="25" x="790" y="15" as="geometry" /></mxCell>
+        <mxCell id="label_no01" parent="lane2" style="text;fontSize=12;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="25" width="25" x="725" y="75" as="geometry" /></mxCell>
+        <mxCell id="step03" parent="lane5" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="03&#xa;库存调整" vertex="1"><mxGeometry height="45" width="160" x="830" y="12" as="geometry" /></mxCell>
+        <mxCell id="sys03" parent="lane5" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=11;fontStyle=1;size=0.5;" value="财务系统" vertex="1"><mxGeometry height="28" width="90" x="865" y="-16" as="geometry" /></mxCell>
+        <mxCell id="doc03" parent="lane5" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《库存调整单》" vertex="1"><mxGeometry height="25" width="90" x="990" y="52" as="geometry" /></mxCell>
+        <mxCell id="step04" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="04&#xa;安全库存预警" vertex="1"><mxGeometry height="45" width="160" x="1040" y="12" as="geometry" /></mxCell>
+        <mxCell id="sys04" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=11;fontStyle=1;size=0.5;" value="预警系统" vertex="1"><mxGeometry height="28" width="90" x="1075" y="-16" as="geometry" /></mxCell>
+        <mxCell id="decision02" parent="lane2" style="rhombus;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="是否触发&#xa;补货？" vertex="1"><mxGeometry height="60" width="100" x="1250" y="5" as="geometry" /></mxCell>
+        <mxCell id="label_yes02" parent="lane2" style="text;fontSize=12;fontColor=#00FF00;fontStyle=1;align=center;" value="是" vertex="1"><mxGeometry height="25" width="25" x="1350" y="15" as="geometry" /></mxCell>
+        <mxCell id="label_no02" parent="lane2" style="text;fontSize=12;fontColor=#FF0000;fontStyle=1;align=center;" value="否" vertex="1"><mxGeometry height="25" width="25" x="1285" y="75" as="geometry" /></mxCell>
+        <mxCell id="step05" parent="lane3" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="05&#xa;采购补货" vertex="1"><mxGeometry height="45" width="160" x="1400" y="12" as="geometry" /></mxCell>
+        <mxCell id="sys05" parent="lane3" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=11;fontStyle=1;size=0.5;" value="ERP系统" vertex="1"><mxGeometry height="28" width="90" x="1435" y="-16" as="geometry" /></mxCell>
+        <mxCell id="doc05" parent="lane3" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《采购订单》" vertex="1"><mxGeometry height="25" width="90" x="1560" y="52" as="geometry" /></mxCell>
+        <mxCell id="step06" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="06&#xa;出入库管理" vertex="1"><mxGeometry height="45" width="160" x="1400" y="12" as="geometry" /></mxCell>
+        <mxCell id="sys06" parent="lane2" style="shape=cloud;whiteSpace=wrap;fillColor=#D1EDA0;strokeColor=#00AA00;fontColor=#000000;fontSize=11;fontStyle=1;size=0.5;" value="WMS系统" vertex="1"><mxGeometry height="28" width="90" x="1435" y="-16" as="geometry" /></mxCell>
+        <mxCell id="doc06" parent="lane2" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《出入库单》" vertex="1"><mxGeometry height="25" width="90" x="1560" y="52" as="geometry" /></mxCell>
+        <mxCell id="step07" parent="lane2" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="07&#xa;数据同步" vertex="1"><mxGeometry height="45" width="160" x="1610" y="12" as="geometry" /></mxCell>
+        <mxCell id="step08" parent="lane4" style="rounded=0;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=14;" value="08&#xa;库存报表" vertex="1"><mxGeometry height="45" width="160" x="1610" y="12" as="geometry" /></mxCell>
+        <mxCell id="doc08" parent="lane4" style="shape=document;whiteSpace=wrap;fillColor=#FFC000;strokeColor=#FFD700;fontColor=#000000;fontSize=11;fontStyle=1;size=0.15;" value="《库存报表》" vertex="1"><mxGeometry height="25" width="90" x="1770" y="52" as="geometry" /></mxCell>
+        <mxCell id="end" parent="lane1" style="rounded=1;whiteSpace=wrap;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;strokeWidth=2;fontSize=12;" value="结束" vertex="1"><mxGeometry height="35" width="70" x="1780" y="17" as="geometry" /></mxCell>
+        <mxCell id="e01" edge="1" parent="1" source="start" target="step01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e02" edge="1" parent="1" source="step01" target="step02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e03" edge="1" parent="1" source="step02" target="decision01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e04" edge="1" parent="1" source="decision01" target="step03" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e05" edge="1" parent="1" source="decision01" target="step01" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e06" edge="1" parent="1" source="step03" target="step04" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e07" edge="1" parent="1" source="step04" target="decision02" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e08" edge="1" parent="1" source="decision02" target="step05" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;" value="是"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e09" edge="1" parent="1" source="decision02" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#FFFFFF;strokeWidth=2;" value="否"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="step05" target="step06" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="step06" target="step07" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="step07" target="step08" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="step08" target="end" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#FFFFFF;strokeWidth=2;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>`
+};
+
+// ========== 表单数据模板（从XML提取）==========
+const FORM_TEMPLATES = {
+  'pig-transfer': {
+    code: '4.2',
+    name: '断奶仔猪转群流程',
+    swimlanes: [
+      {id:'s1',name:'流程驱动',acts:[{id:'a1',num:'01',name:'断奶计划制定',sys:['养殖管理系统'],docInp:[],docOut:['断奶计划表']}]},
+      {id:'s2',name:'产房',acts:[{id:'a3',num:'03',name:'转群批次确认',sys:[],docInp:[],docOut:['转群批次单']}]},
+      {id:'s3',name:'保育舍',acts:[{id:'a5',num:'05',name:'转入保育舍',sys:[],docInp:[],docOut:[]}]},
+      {id:'s4',name:'兽医',acts:[{id:'a2',num:'02',name:'仔猪健康评估',sys:[],docInp:[],docOut:['健康评估报告']},{id:'a7',num:'07',name:'隔离观察处理',sys:[],docInp:[],docOut:['隔离观察记录']}]},
+      {id:'s5',name:'饲养员',acts:[{id:'a4',num:'04',name:'转群操作执行',sys:[],docInp:[],docOut:[]}]},
+      {id:'s6',name:'统计员',acts:[{id:'a6',num:'06',name:'转群记录',sys:[],docInp:[],docOut:['转群记录表']},{id:'a8',num:'08',name:'转群数据统计',sys:['数据分析系统'],docInp:[],docOut:['转群统计报表']}]}
+    ],
+    info: `### 流程信息
+- 流程名称：断奶仔猪转群流程
+- 版本号：4.2
+- 画布尺寸：1920 x 1080
+
+### 角色与泳道（6个）
+- lane1：流程驱动（第一泳道，包含开始和结束）
+- lane2：产房
+- lane3：保育舍
+- lane4：兽医
+- lane5：饲养员
+- lane6：统计员
+
+### 活动清单（按流程顺序）
+01 断奶计划制定（lane1）| 系统：养殖管理系统 | 输出：《断奶计划表》
+02 仔猪健康评估（lane4）| 输出：《健康评估报告》
+03 转群批次确认（lane2）| 输出：《转群批次单》
+04 转群操作执行（lane5）
+05 转入保育舍（lane3）
+06 转群记录（lane6）| 输出：《转群记录表》
+07 隔离观察处理（lane4）| 输出：《隔离观察记录》
+08 转群数据统计（lane6）| 系统：数据分析系统 | 输出：《转群统计报表》
+
+### 决策点（2个）
+- decision01：是否达到转群标准？| Yes → step04（转群操作执行）| No → 返回 step02（仔猪健康评估）
+- decision02：是否需要隔离观察？| Yes → step07（隔离观察处理）| No → step06（转群记录）
+
+### 连接关系
+start → step01 → step02 → step03 → decision01
+decision01 -[是]→ step04 → step05 → decision02
+decision01 -[否]→ step02（返回）
+decision02 -[是]→ step07 → step06
+decision02 -[否]→ step06
+step06 → step08 → end`
+  },
+
+  'purchase-exec': {
+    code: '5.1',
+    name: '采购执行流程',
+    swimlanes: [
+      {id:'s1',name:'流程驱动',acts:[{id:'a2',num:'02',name:'价格审核',sys:['财务系统'],docInp:[],docOut:[]}]},
+      {id:'s2',name:'采购部门',acts:[{id:'a1',num:'01',name:'采购订单确认',sys:['ERP系统'],docInp:[],docOut:['采购订单']}]},
+      {id:'s3',name:'供应商',acts:[{id:'a3',num:'03',name:'订单执行',sys:[],docInp:[],docOut:[]},{id:'a4',num:'04',name:'发货通知',sys:[],docInp:[],docOut:['发货通知单']}]},
+      {id:'s4',name:'仓储部门',acts:[{id:'a5',num:'05',name:'收货验收',sys:['WMS系统'],docInp:[],docOut:['验收单']},{id:'a6',num:'06',name:'质量检验',sys:[],docInp:[],docOut:['质检报告']},{id:'a7',num:'07',name:'入库上架',sys:['WMS系统'],docInp:[],docOut:['入库单']}]}
+    ],
+    info: `### 流程信息
+- 流程名称：采购执行流程
+- 版本号：5.1
+- 画布尺寸：1920 x 1080
+
+### 角色与泳道（4个）
+- lane1：流程驱动（第一泳道，包含开始和结束）
+- lane2：采购部门
+- lane3：供应商
+- lane4：仓储部门
+
+### 活动清单（按流程顺序）
+01 采购订单确认（lane2）| 系统：ERP系统 | 输出：《采购订单》
+02 价格审核（lane1）| 系统：财务系统
+03 订单执行（lane3）
+04 发货通知（lane3）| 输出：《发货通知单》
+05 收货验收（lane4）| 系统：WMS系统 | 输出：《验收单》
+06 质量检验（lane4）| 输出：《质检报告》
+07 入库上架（lane4）| 系统：WMS系统 | 输出：《入库单》
+
+### 决策点（1个）
+- decision01：是否按时交付？| Yes → step04（发货通知）| No → 返回 step03（订单执行）
+
+### 连接关系
+start → step01 → step02 → step03 → decision01
+decision01 -[是]→ step04 → step05 → step06 → step07 → end
+decision01 -[否]→ step03（返回）`
+  },
+
+  'payment-approval': {
+    code: '6.1',
+    name: '付款审批流程',
+    swimlanes: [
+      {id:'s1',name:'流程驱动',acts:[{id:'a1',num:'01',name:'付款申请提交',sys:['财务系统'],docInp:[],docOut:['付款申请单']}]},
+      {id:'s2',name:'财务部门',acts:[{id:'a2',num:'02',name:'发票审核',sys:['财务系统'],docInp:[],docOut:[]},{id:'a3',num:'03',name:'部门审批',sys:[],docInp:[],docOut:[]},{id:'a5',num:'05',name:'付款执行',sys:['银行系统'],docInp:[],docOut:[]},{id:'a6',num:'06',name:'付款凭证归档',sys:[],docInp:[],docOut:['付款凭证']}]},
+      {id:'s3',name:'管理层',acts:[{id:'a4',num:'04',name:'管理层审批',sys:[],docInp:[],docOut:[]}]}
+    ],
+    info: `### 流程信息
+- 流程名称：付款审批流程
+- 版本号：6.1
+- 画布尺寸：1920 x 1080
+
+### 角色与泳道（3个）
+- lane1：流程驱动（第一泳道，包含开始和结束）
+- lane2：财务部门
+- lane3：管理层
+
+### 活动清单（按流程顺序）
+01 付款申请提交（lane1）| 系统：财务系统 | 输出：《付款申请单》
+02 发票审核（lane2）| 系统：财务系统
+03 部门审批（lane2）
+04 管理层审批（lane3）
+05 付款执行（lane2）| 系统：银行系统
+06 付款凭证归档（lane2）| 输出：《付款凭证》
+
+### 决策点（2个）
+- decision01：发票是否合规？| Yes → step03（部门审批）| No → 返回 step02（发票审核）
+- decision02：审批是否通过？| Yes → step05（付款执行）| No → 返回 step03（部门审批）
+
+### 连接关系
+start → step01 → step02 → decision01
+decision01 -[是]→ step03 → step04 → decision02
+decision01 -[否]→ step02（返回）
+decision02 -[是]→ step05 → step06 → end
+decision02 -[否]→ step03（返回）`
+  },
+
+  'inventory-mgmt': {
+    code: '7.1',
+    name: '库存管理流程',
+    swimlanes: [
+      {id:'s1',name:'流程驱动',acts:[]},
+      {id:'s2',name:'仓储部门',acts:[{id:'a1',num:'01',name:'库存盘点',sys:['WMS系统'],docInp:[],docOut:['盘点表']},{id:'a2',num:'02',name:'差异分析',sys:[],docInp:[],docOut:['差异分析报告']},{id:'a4',num:'04',name:'安全库存预警',sys:['预警系统'],docInp:[],docOut:[]},{id:'a6',num:'06',name:'出入库管理',sys:['WMS系统'],docInp:[],docOut:['出入库单']},{id:'a7',num:'07',name:'数据同步',sys:[],docInp:[],docOut:[]}]},
+      {id:'s3',name:'采购部门',acts:[{id:'a5',num:'05',name:'采购补货',sys:['ERP系统'],docInp:[],docOut:['采购订单']}]},
+      {id:'s4',name:'销售部门',acts:[{id:'a8',num:'08',name:'库存报表',sys:[],docInp:[],docOut:['库存报表']}]},
+      {id:'s5',name:'财务部门',acts:[{id:'a3',num:'03',name:'库存调整',sys:['财务系统'],docInp:[],docOut:['库存调整单']}]}
+    ],
+    info: `### 流程信息
+- 流程名称：库存管理流程
+- 版本号：7.1
+- 画布尺寸：1920 x 1080
+
+### 角色与泳道（5个）
+- lane1：流程驱动（第一泳道，包含开始和结束）
+- lane2：仓储部门
+- lane3：采购部门
+- lane4：销售部门
+- lane5：财务部门
+
+### 活动清单（按流程顺序）
+01 库存盘点（lane2）| 系统：WMS系统 | 输出：《盘点表》
+02 差异分析（lane2）| 输出：《差异分析报告》
+03 库存调整（lane5）| 系统：财务系统 | 输出：《库存调整单》
+04 安全库存预警（lane2）| 系统：预警系统
+05 采购补货（lane3）| 系统：ERP系统 | 输出：《采购订单》
+06 出入库管理（lane2）| 系统：WMS系统 | 输出：《出入库单》
+07 数据同步（lane2）
+08 库存报表（lane4）| 输出：《库存报表》
+
+### 决策点（2个）
+- decision01：差异是否合理？| Yes → step03（库存调整）| No → 返回 step01（库存盘点）
+- decision02：是否触发补货？| Yes → step05（采购补货）| No → step06（出入库管理）
+
+### 连接关系
+start → step01 → step02 → decision01
+decision01 -[是]→ step03 → step04 → decision02
+decision01 -[否]→ step01（返回）
+decision02 -[是]→ step05 → step06
+decision02 -[否]→ step06
+step06 → step07 → step08 → end`
+  }
+};
+
+// ========== 初始化 ==========
+function init() {
+  document.getElementById('tmplContent').textContent = DELOITTE_SKILLS;
+  loadTmpl();
+}
+
+// ========== Draw.io 通信 ==========
+window.addEventListener("message",(e)=>{
+  try{
+    const m=typeof e.data==='string'?JSON.parse(e.data):e.data;
+    if(m.event==="init"){
+      drawioReady=true;
+      document.getElementById('pvSt').textContent='就绪';
+      if(pendingXML){sendXML(pendingXML);pendingXML=null;}
+    }
+    if(m.event==="load"){
+      document.getElementById('pvSt').textContent='已加载';
+    }
+  }catch(x){}
+});
+
+function initDrawIO(){
+  document.getElementById('drawioFrame').src="https://embed.diagrams.net/?embed=1&proto=json&ui=atlas&spin=1";
+}
+
+function sendXML(xml){
+  if(!drawioReady){pendingXML=xml;return;}
+  document.getElementById('drawioFrame').contentWindow.postMessage(JSON.stringify({action:"load",xml:xml}),"*");
+  document.getElementById('pvSt').textContent='已加载';
+}
+
+// ========== 模板加载（同时填充表单+XML+流程信息）==========
+function loadTmpl(){
+  const sel = document.getElementById('tmplSel').value;
+
+  if(!sel || sel==='custom'){
+    document.getElementById('processInfo').value = '';
+    FD = {pCode:'4.2',pName:'自定义流程',swimlanes:[]};
+    render();
+    return;
+  }
+
+  // 加载XML到代码编辑器和预览
+  const xml = XML_TEMPLATES[sel];
+  if(xml){
+    XML = xml;
+    document.getElementById('xmlOut').value = XML;
+    document.getElementById('xmlInfo').textContent = '预设已加载';
+    sendXML(XML);
+  }
+
+  // 加载表单数据和流程信息
+  const formData = FORM_TEMPLATES[sel];
+  if(formData){
+    document.getElementById('pCode').value = formData.code;
+    document.getElementById('pName').value = formData.name;
+    document.getElementById('processInfo').value = formData.info;
+
+    FD = {
+      pCode: formData.code,
+      pName: formData.name,
+      swimlanes: JSON.parse(JSON.stringify(formData.swimlanes))
+    };
+    render();
+  }
+}
+
+// ========== 从表单生成流程信息（关键函数）==========
+function genFromForm(){
+  // 更新基本信息
+  FD.pCode = document.getElementById('pCode').value;
+  FD.pName = document.getElementById('pName').value;
+
+  // 收集所有活动（按泳道顺序）
+  let allActs = [];
+  FD.swimlanes.forEach((sl, slIdx) => {
+    sl.acts.forEach(act => {
+      allActs.push({
+        num: act.num,
+        name: act.name,
+        lane: `lane${slIdx + 1}`,
+        laneName: sl.name,
+        sys: act.sys,
+        docInp: act.docInp,
+        docOut: act.docOut
+      });
+    });
+  });
+
+  // 生成流程信息文本
+  let info = `### 流程信息
+- 流程名称：${FD.pName}
+- 版本号：${FD.pCode}
+- 画布尺寸：1920 x 1080
+
+### 角色与泳道（${FD.swimlanes.length}个）
+`;
+  FD.swimlanes.forEach((sl, i) => {
+    const note = i === 0 ? '（第一泳道，包含开始和结束）' : '';
+    info += `- lane${i+1}：${sl.name}${note}\n`;
+  });
+
+  info += `
+### 活动清单（按流程顺序）
+`;
+  allActs.forEach(act => {
+    let details = `（${act.lane}）`;
+    if(act.sys.length > 0) details += ` | 系统：${act.sys.join('、')}`;
+    if(act.docOut.length > 0) details += ` | 输出：${act.docOut.map(d => `《${d}》`).join('、')}`;
+    if(act.docInp.length > 0) details += ` | 输入：${act.docInp.map(d => `《${d}》`).join('、')}`;
+    info += `${act.num} ${act.name} ${details}\n`;
+  });
+
+  info += `
+### 连接关系
+（请根据活动顺序描述连接关系，如：start → step01 → step02 ... → end）
+（如有决策点，请说明 Yes/No 的去向）
+`;
+
+  // 更新流程信息文本框
+  document.getElementById('processInfo').value = info;
+  document.getElementById('xmlInfo').textContent = '已从表单生成';
+}
+
+// ========== 表单渲染 ==========
+function render(){
+  const c=document.getElementById('slCont');
+  c.innerHTML='';
+  FD.swimlanes.forEach((s,i)=>{
+    const e=document.createElement('div');
+    e.className='sl-c exp';
+    e.id=s.id;
+    e.innerHTML=`
+      <div class="sl-h" onclick="togS('${s.id}')">
+        <div class="sl-hl">
+          <div class="sl-i">${i+1}</div>
+          <span class="sl-n">${s.name}</span>
+          <span class="sl-cnt">(${s.acts.length})</span>
+        </div>
+        <div class="sl-a">
+          <button class="btn bs" onclick="event.stopPropagation();addA('${s.id}')">+</button>
+          <button class="btn bs" onclick="event.stopPropagation();rmS('${s.id}')" style="color:var(--e)">×</button>
+        </div>
+      </div>
+      <div class="sl-b">
+        <div class="al">${s.acts.map(a=>rA(s.id,a)).join('')}</div>
+      </div>
+    `;
+    c.appendChild(e);
+  });
+}
+
+function rA(sid,a){
+  return `
+    <div class="ai ${a.id}" id="${a.id}">
+      <div class="ai-h" onclick="togA('${a.id}')">
+        <div class="ai-hl">
+          <span class="ai-n">${a.num}</span>
+          <span class="ai-nm">${a.name}</span>
+        </div>
+        <button class="btn bs" onclick="event.stopPropagation();rmA('${sid}','${a.id}')" style="color:var(--e)">×</button>
+      </div>
+      <div class="ai-b">
+        <div class="fg"><label>名称</label><input type="text" value="${a.name}" onchange="updN('${a.id}',this.value)"></div>
+        <div class="ds"><h5><span class="d i"></span> 系统</h5><div>
+          ${a.sys.map(d=>`<span class="dt i">💻 ${d}<span class="rm" onclick="rmD('${a.id}','sys','${d}')">×</span></span>`).join('')}
+          <button class="btn bs" onclick="addD('${a.id}','sys')">+</button>
+        </div></div>
+        <div class="ds"><h5><span class="d i"></span> 输入文档</h5><div>
+          ${a.docInp.map(d=>`<span class="dt i">📄 ${d}<span class="rm" onclick="rmD('${a.id}','docInp','${d}')">×</span></span>`).join('')}
+          <button class="btn bs" onclick="addD('${a.id}','docInp')">+</button>
+        </div></div>
+        <div class="ds"><h5><span class="d o"></span> 输出文档</h5><div>
+          ${a.docOut.map(d=>`<span class="dt o">📄 ${d}<span class="rm" onclick="rmD('${a.id}','docOut','${d}')">×</span></span>`).join('')}
+          <button class="btn bs" onclick="addD('${a.id}','docOut')">+</button>
+        </div></div>
+      </div>
+    </div>
+  `;
+}
+
+function togS(id){document.getElementById(id).classList.toggle('exp')}
+function togA(id){document.getElementById(id).classList.toggle('exp')}
+function addRole(){
+  const i=document.getElementById('nRole');
+  if(i.value.trim()){FD.swimlanes.push({id:'s'+Date.now(),name:i.value.trim(),acts:[]});render();i.value='';}
+}
+function rmS(id){FD.swimlanes=FD.swimlanes.filter(s=>s.id!==id);render()}
+function addA(sid){
+  const s=FD.swimlanes.find(s=>s.id===sid);
+  if(s){s.acts.push({id:'a'+Date.now(),num:(s.acts.length+1).toString().padStart(2,'0'),name:'新活动',sys:[],docInp:[],docOut:[]});render();}
+}
+function rmA(sid,aid){
+  const s=FD.swimlanes.find(s=>s.id===sid);
+  if(s){s.acts=s.acts.filter(a=>a.id!==aid);s.acts.forEach((a,i)=>a.num=(i+1).toString().padStart(2,'0'));render();}
+}
+function updN(aid,n){for(const s of FD.swimlanes){const a=s.acts.find(a=>a.id===aid);if(a){a.name=n;break;}}}
+function addD(aid,t){
+  const n=prompt('请输入名称:');
+  if(n){for(const s of FD.swimlanes){const a=s.acts.find(a=>a.id===aid);if(a){a[t].push(n);render();break;}}}
+}
+function rmD(aid,t,n){for(const s of FD.swimlanes){const a=s.acts.find(a=>a.id===aid);if(a){a[t]=a[t].filter(d=>d!==n);render();break;}}}
+
+// ========== AI 优化并生成 XML ==========
+async function genWithAI(){
+  const k=document.getElementById('apiKey').value.trim();
+  const processInfo=document.getElementById('processInfo').value.trim();
+
+  if(!k){alert('请输入 API Key');return;}
+  if(!processInfo){alert('请输入流程信息（或点击"从表单生成流程信息"）');return;}
+
+  const sd=document.getElementById('stDot'),st=document.getElementById('stTxt');
+  sd.classList.add('ld');st.textContent='AI 生成中...';
+
+  try{
+    const fullPrompt = `## 任务
+
+根据下面提供的【流程信息】，生成一个符合【德勤标准约束】的 Draw.io XML 文件。
+
+---
+
+## 流程信息
+
+${processInfo}
+
+---
+
+## 德勤标准约束（必须严格遵守）
+
+${DELOITTE_SKILLS.replace('# 德勤标准 Drawio XML 生成 - 完整约束\n\n---\n\n## 任务\n\n根据下面提供的【流程信息】，生成一个符合【德勤标准约束】的 Draw.io XML 文件。\n\n---\n\n','')}`;
+
+    const r=await fetch('https://api.xiaomimimo.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','api-key':k},
+      body:JSON.stringify({
+        model:'mimo-v2.5',
+        messages:[
+          {role:'system',content:'你是 Draw.io XML 生成专家，精通 Deloitte 标准流程图规范。请严格按照提供的流程信息和规范生成 XML。只输出 XML，不要有任何额外说明。'},
+          {role:'user',content:fullPrompt}
+        ],
+        max_completion_tokens:16384,
+        temperature:0.7
+      })
+    });
+
+    if(!r.ok)throw new Error(await r.text());
+    const d=await r.json();
+    const xml=d.choices[0].message.content.match(/<mxfile[\s\S]*<\/mxfile>/);
+
+    if(xml){
+      XML=xml[0];
+      document.getElementById('xmlOut').value=XML;
+      document.getElementById('xmlInfo').textContent='AI 已生成';
+      sendXML(XML);
+    } else {
+      throw new Error('AI 未返回有效 XML');
+    }
+
+    sd.classList.remove('ld');sd.style.background='var(--ok)';st.textContent='已生成';
+  }catch(e){
+    alert(`AI 失败: ${e.message}`);
+    sd.classList.remove('ld');sd.style.background='var(--e)';st.textContent='错误';
+  }
+}
+
+// ========== 下载/复制 ==========
+function dl(){
+  if(!XML){alert('请先生成 XML');return;}
+  const b=new Blob([XML],{type:'application/xml'});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement('a');
+  a.href=u;
+  a.download=`${document.getElementById('pCode').value}_${document.getElementById('pName').value}.drawio`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(u);
+}
+
+function cp(){
+  navigator.clipboard.writeText(document.getElementById('xmlOut').value).then(()=>alert('已复制到剪贴板'));
+}
+
+// ========== 页面加载 ==========
+document.addEventListener('DOMContentLoaded',()=>{
+  init();
+  setTimeout(initDrawIO,500);
+});
+</script>
+</body>
+</html>
