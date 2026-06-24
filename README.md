@@ -572,9 +572,6 @@ body: JSON.stringify({
    
 ---
 
-## 当前状态
-
-正在基于 **v13** 构建 **v21**，v18→v20 已完成，v21 进行中。
 
 ### 已完成（v18-v20）
 - ✅ 下拉选单选择流程 → 自动填充流程信息
@@ -590,8 +587,7 @@ body: JSON.stringify({
 - ✅ v22：流程信息实时同步（增删系统/文档自动更新）+ 层级指示器排版 + 流程编号/名称体现
 - ✅ 完整的 Deloitte 规范模板（蒸馏后的 skills）作为 AI 提示词基础
 
-### 进行中（v23）
-- 🔧 待确认下一步需求
+
 
 ### MiMo API 配置
 - Endpoint: `https://api.xiaomimimo.com/v1/chat/completions`
