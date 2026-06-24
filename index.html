@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deloitte 流程图生成器 v22</title>
+<title>Deloitte 流程图生成器 v23</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--p:#86BC25;--pd:#6B9A20;--bd:#1a1a1a;--bc:#2a2a2a;--bi:#333;--t:#fff;--ts:#aaa;--b:#444;--ok:#28a745;--w:#ffc107;--i:#17a2b8;--di:#4CAF50;--dout:#FF9800;--e:#dc3545}
@@ -28,7 +28,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bd);color:var(--t)
 .hs .ic{width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:bold;line-height:1}
 .hs.sl .ic{background:var(--p);color:#000}
 .hs.ac .ic{background:var(--i);color:#fff}
-.hs.dc .ic{background:#ffc107;color:#000;border-radius:2px;width:14px;height:12px}
+.hs.dc .ic{background:#ffc107;color:#000;border-radius:2px}
 .ha{color:var(--ts)}
 .sc{margin-top:10px}
 .sl-c{background:var(--bi);border:1px solid var(--b);border-radius:5px;margin-bottom:8px;overflow:hidden}
@@ -75,11 +75,13 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bd);color:var(--t)
 .drawio-link p{font-size:10px;color:var(--ts);margin-bottom:8px}
 .drawio-link a{color:var(--i);text-decoration:none;font-size:11px;font-weight:600}
 .drawio-link a:hover{text-decoration:underline}
+.act-num-input{width:30px;padding:2px 4px;background:var(--bi);border:1px solid var(--p);border-radius:3px;color:var(--p);font-size:10px;font-weight:bold;text-align:center}
+.act-num-input:focus{outline:none;border-color:var(--ok)}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bd)}::-webkit-scrollbar-thumb{background:#555;border-radius:3px}
 </style>
 </head>
 <body>
-<header class="hdr"><div><h1>流程图生成器 v22</h1><p style="font-size:10px;color:#aaa;margin-top:2px">Deloitte 标准泳道 · 实时同步 · MiMo AI</p></div><div class="br">DELOITTE.标准 v22</div></header>
+<header class="hdr"><div><h1>流程图生成器 v23</h1><p style="font-size:10px;color:#aaa;margin-top:2px">Deloitte 标准泳道 · 可编辑编号 · MiMo AI</p></div><div class="br">DELOITTE.标准 v23</div></header>
 <div class="mc">
 <aside class="sb">
 <h2>流程配置</h2>
@@ -882,6 +884,18 @@ function syncProcessInfo(){
   genFromForm();
 }
 
+// ========== 更新活动编号 ==========
+function updActNum(aid, newNum){
+  for(const s of FD.swimlanes){
+    const a = s.acts.find(a => a.id === aid);
+    if(a){
+      a.num = newNum;
+      syncProcessInfo(); // 同步流程信息
+      break;
+    }
+  }
+}
+
 // ========== 表单渲染 ==========
 function render(){
   const c=document.getElementById('slCont');
@@ -915,7 +929,7 @@ function rA(sid,a){
     <div class="ai ${a.id}" id="${a.id}">
       <div class="ai-h" onclick="togA('${a.id}')">
         <div class="ai-hl">
-          <span class="ai-n">${a.num}</span>
+          <input type="text" class="act-num-input" value="${a.num}" onclick="event.stopPropagation()" onchange="updActNum('${a.id}',this.value)" title="点击编辑编号">
           <span class="ai-nm">${a.name}</span>
         </div>
         <button class="btn bs" onclick="event.stopPropagation();rmA('${sid}','${a.id}')" style="color:var(--e)">×</button>
@@ -958,9 +972,19 @@ function rmS(id){
 function addA(sid){
   const s=FD.swimlanes.find(s=>s.id===sid);
   if(s){
+    // 计算新的编号（基于全局最大编号+1）
+    let maxNum = 0;
+    FD.swimlanes.forEach(sl => {
+      sl.acts.forEach(a => {
+        const n = parseInt(a.num, 10);
+        if(!isNaN(n) && n > maxNum) maxNum = n;
+      });
+    });
+    const newNum = (maxNum + 1).toString().padStart(2, '0');
+
     s.acts.push({
       id:'a'+Date.now(),
-      num:(s.acts.length+1).toString().padStart(2,'0'),
+      num: newNum,
       name:'新活动',
       sys:[],
       docInp:[],
@@ -974,7 +998,7 @@ function rmA(sid,aid){
   const s=FD.swimlanes.find(s=>s.id===sid);
   if(s){
     s.acts=s.acts.filter(a=>a.id!==aid);
-    s.acts.forEach((a,i)=>a.num=(i+1).toString().padStart(2,'0'));
+    // 注意：不再重新编号，保留用户自定义的编号
     render();
     syncProcessInfo(); // 同步流程信息
   }
